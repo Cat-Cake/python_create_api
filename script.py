@@ -60,11 +60,16 @@ def game_by_id(game_id):
         stats = item.find('stats')
         minplayer = stats.get('minplayers')
         maxplayer = stats.get('maxplayers')
-
+        lstcategories = ""
+        for category in item.findall('boardgamecategory'):
+            lstcategories = lstcategories + ' , ' + category.string
+        lstcategories = lstcategories[1:]
         dictGame = {
             'id': item.get('objectid'),
             'title': item.find('name').string,
+            'caterogies': lstcategories.string,
             'thumbnail': item.find('thumbnail').string,
+            'image': item.find('image').string,
             'date': item.find('yearpublished').string,
             'players': stats.get('maxplayers') if stats.get('minplayers') == stats.get('maxplayers') else stats.get('minplayers') + ' - ' + stats.get('maxplayers'),
             'playtime': stats.get('maxplaytime') if stats.get('minplaytime') == stats.get('maxplaytime') else stats.get('minplaytime') + ' - ' + stats.get('maxplayers')
