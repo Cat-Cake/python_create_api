@@ -46,8 +46,29 @@ def get_games():
     return listGame
 
 
-get_games()
+gameid = get_games()
+print(gameid[0]['id'])
 
-# @app.route("/games/")
-# def hello_world():
-#     return "<p>Hello, World!</p>"
+# params = {'game_id': item.get('objectid')}
+# response = requests.get('http://127.0.0.1:5000/',
+#             params=params)
+
+@app.route("/games/<string:game_id>", methods = ['GET'])
+def game_by_id(game_id):
+    for item in soup.find_all('item'):
+        title = item.find('name').string
+        stats = item.find('stats')
+        minplayer = stats.get('minplayers')
+        maxplayer = stats.get('maxplayers')
+
+        dictGame = {
+            'id': item.get('objectid'),
+            'title': item.find('name').string,
+            'thumbnail': item.find('thumbnail').string,
+            'date': item.find('yearpublished').string,
+            'players': stats.get('maxplayers') if stats.get('minplayers') == stats.get('maxplayers') else stats.get('minplayers') + ' - ' + stats.get('maxplayers'),
+            'playtime': stats.get('maxplaytime') if stats.get('minplaytime') == stats.get('maxplaytime') else stats.get('minplaytime') + ' - ' + stats.get('maxplayers')
+        }
+
+        if dictGame['id'] == game_id:
+            return dictGame
